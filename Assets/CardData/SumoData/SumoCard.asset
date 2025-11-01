@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b113c77637fb649a09e74feddf76eb, type: 3}
+  m_Name: SumoCard
+  m_EditorClassIdentifier: Assembly-CSharp::SumoCard
+  cardName: Jeff
+  cardDescription: Add one to Sumo Strength checks
+  cardSprite: {fileID: 0}
+  sumoStamina: 0
+  sumoAbility: {fileID: 11400000, guid: e723e726c58160d4b8a7ff8b9771ff79, type: 2}
