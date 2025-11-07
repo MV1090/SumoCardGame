@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WrestlingCard", menuName = "Cards/WrestlingCard")]
-public class WrestlingCard : Card
+public class WrestlingCard_Scriptable : Card_Scriptable
 {
     public int strengthBonus;
     public int defenseBonus;

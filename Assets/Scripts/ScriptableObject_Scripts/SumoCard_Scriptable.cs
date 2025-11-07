@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SumoCard", menuName = "Cards/SumoCard")]
-public class SumoCard : Card
+public class SumoCard_Scriptable : Card_Scriptable
 {
     public int sumoStamina;
     public Ability sumoAbility;

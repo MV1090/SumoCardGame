@@ -13,6 +13,6 @@ public class Player : MonoBehaviour
         }
     }
     public PlayerStats stats;
-    [SerializeField] private SumoCard currentSumoCard;
+    [SerializeField] private SumoCard_Scriptable currentSumoCard;
     
 }
