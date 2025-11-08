@@ -1,59 +1,31 @@
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class SumoCard : MonoBehaviour
+public class SumoCard : BaseCard
 {
-    public SumoCard_Scriptable sumoCardData;
+    public TMP_Text staminaText;
 
-    [Header("UI References")]
-    public TMP_Text nameText;
-    public TMP_Text descriptionText;
-    
-    public SpriteRenderer artworkImage;
-
-    private void Awake()
+    public override void SafeUpdateCardVisuals()
     {
-        //InitCard();
-    }
-
-    private void InitCard()
-    {
-        nameText.text = sumoCardData.cardName;
-        descriptionText.text = "Ability: /n" + sumoCardData.cardDescription;
-        artworkImage.sprite = sumoCardData.cardSprite;
-    }
-
-    // for editor updates   
-    private void OnValidate()
-    {
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
+        base.SafeUpdateCardVisuals();
+        if (cardData == null) { 
+            if (staminaText) 
+                staminaText.text = ""; 
+        }
+        else 
         {
-            EditorApplication.delayCall += () =>
+            if (cardData is SumoCard_Scriptable sumoCardData)
             {
-                if (this == null) return; // object might have been destroyed
-                SafeUpdateCardVisuals();
-            };
-            return;
-        }
-#endif
-        SafeUpdateCardVisuals();
-    }
-
-    private void SafeUpdateCardVisuals()
-    {
-        if (sumoCardData == null)
-        {
-            if (nameText) nameText.text = "";
-            if (descriptionText) descriptionText.text = "";
-            if (artworkImage) artworkImage.sprite = null;
-        }
-        else
-        {
-            if (nameText) nameText.text = sumoCardData.cardName;
-            if (descriptionText) descriptionText.text = "Ability: \n"  + sumoCardData.cardDescription;
-            if (artworkImage) artworkImage.sprite = sumoCardData.cardSprite;
+                if (staminaText)
+                    staminaText.text = sumoCardData.sumoStamina.ToString();
+            }
+            else 
+            {
+                if (staminaText)
+                    staminaText.text = "";
+            }
         }
     }
 
