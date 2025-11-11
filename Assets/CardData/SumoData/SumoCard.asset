@@ -15,5 +15,5 @@ MonoBehaviour:
   cardName: Big deb
   cardDescription: Add one to Sumo Strength checks
   cardSprite: {fileID: 21300000, guid: b42eb03873f4d964ebf5e1bb484ae4e5, type: 3}
-  sumoStamina: 0
+  sumoStamina: 10
   sumoAbility: {fileID: 11400000, guid: e723e726c58160d4b8a7ff8b9771ff79, type: 2}

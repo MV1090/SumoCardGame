@@ -13,6 +13,12 @@ public class Player : MonoBehaviour
         }
     }
     public PlayerStats stats;
+
     [SerializeField] private SumoCard_Scriptable currentSumoCard;
-    
+    [SerializeField] CardDeck activeDeck; 
+
+    public void DrawCard()
+    {
+        activeDeck.DrawCard(Vector3.zero); 
+    }
 }

@@ -6,7 +6,7 @@ public class Ability : ScriptableObject
     public string abilityName;
     [TextArea] public string abilityDescription;
 
-    public int firstBonus;
+    public int abilityBonus;
 
     public AbilityType abilityType;
 

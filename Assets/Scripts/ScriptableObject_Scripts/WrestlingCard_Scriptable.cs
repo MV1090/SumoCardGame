@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WrestlingCard", menuName = "Cards/WrestlingCard")]
+[CreateAssetMenu(fileName = "WrestlingCard", menuName = "Cards/Wrestling Card")]
 public class WrestlingCard_Scriptable : Card_Scriptable
 {
     public int strengthBonus;
