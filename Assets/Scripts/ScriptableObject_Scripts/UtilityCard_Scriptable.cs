@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UtilityCard", menuName = "Cards/Utility Card")]
 public class UtilityCard_Scriptable : Card_Scriptable
 {
-    public Ability utilityAbility;
+    public Ability_Scriptable utilityAbility;
 
     private void OnValidate()
     {

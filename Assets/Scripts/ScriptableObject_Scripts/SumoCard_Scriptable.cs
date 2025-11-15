@@ -4,7 +4,7 @@ using UnityEngine;
 public class SumoCard_Scriptable : Card_Scriptable
 {
     public int sumoStamina;
-    public Ability sumoAbility;
+    public Ability_Scriptable sumoAbility;
 
 
     //for editor updates

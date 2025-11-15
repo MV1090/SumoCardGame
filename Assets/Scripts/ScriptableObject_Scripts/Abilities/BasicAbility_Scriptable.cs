@@ -1,26 +1,29 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Ability", menuName = "Abilities/ New Ability")]
-public class Ability : ScriptableObject
+[CreateAssetMenu(fileName = "BasicAbility", menuName = "Abilities/Basic Ability")]
+public class BasicAbility_Scriptable : Ability_Scriptable
 {
-    public string abilityName;
-    [TextArea] public string abilityDescription;
-
     public int abilityBonus;
 
     public AbilityType abilityType;
-
     public enum AbilityType
     {
         StrengthBonus,
         DefenseBonus,
-        DualBonus,
-        HealBonus
+        HealBonus,
+        HandSizeBonus,        
+        IncreaseWeightBonus,
+        ReduceStrength,
+        ReduceDefense,
+        ReduceOpponentsWeight,
+        ReduceOpponentsHandSize,
     }
 
-    public void ActivateAbility()
+    public override void ActivateAbility()
     {
-        switch(abilityType)
+        base.ActivateAbility();
+
+        switch (abilityType)
         {
             case AbilityType.StrengthBonus:
                 //applies strength bonus
@@ -28,17 +31,16 @@ public class Ability : ScriptableObject
             case AbilityType.DefenseBonus:
                 //applies defense bonus
                 break;
-            case AbilityType.DualBonus:
-                //applies both bonuses
-                break;
             case AbilityType.HealBonus:
                 //applies heal bonus
                 break;
         }
     }
 
-    public void RemoveAbility()
+    public override void RemoveAbility()
     {
+        base.RemoveAbility();
+
         switch (abilityType)
         {
             case AbilityType.StrengthBonus:
@@ -46,9 +48,6 @@ public class Ability : ScriptableObject
                 break;
             case AbilityType.DefenseBonus:
                 //removes defense bonus
-                break;
-            case AbilityType.DualBonus:
-                //removes both bonuses
                 break;
             case AbilityType.HealBonus:
                 //removes heal bonus

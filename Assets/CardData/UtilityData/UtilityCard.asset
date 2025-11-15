@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: UtilityCard
   m_EditorClassIdentifier: Assembly-CSharp::UtilityCard_Scriptable
   cardName: Power Boost
-  cardDescription: Add one to Sumo Defence checks
+  cardDescription: 
   cardSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  utilityAbility: {fileID: 11400000, guid: 24bc1896aa327df46bb158f63ddabe8c, type: 2}
+  utilityAbility: {fileID: 11400000, guid: 698ec670241574a489b890d7d538192b, type: 2}

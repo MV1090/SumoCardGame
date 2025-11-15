@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9c0de185443f344a8a53e5b10c98a0b, type: 3}
-  m_Name: WrestlingCard
+  m_Name: 1-0-WrestlingCard
   m_EditorClassIdentifier: Assembly-CSharp::WrestlingCard
   cardName: Wrestling Card
   cardDescription: 
   cardSprite: {fileID: 21300000, guid: 896c7761bdfb5ef4d9687700d40d5813, type: 3}
-  strengthBonus: 5
-  defenseBonus: 2
+  strengthBonus: 1
+  defenseBonus: 0

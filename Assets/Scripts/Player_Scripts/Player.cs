@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        stats.InitializeStats();
     }
     public PlayerStats stats;
 
@@ -19,6 +21,15 @@ public class Player : MonoBehaviour
 
     public void DrawCard()
     {
-        activeDeck.DrawCard(Vector3.zero); 
+        if (HandManager.Instance.IsHandFull())
+        {
+            Debug.Log("Hand is full, cannot draw more cards.");
+            return;
+        }
+
+        GameObject drawnCard = activeDeck.DrawCard(); 
+
+        if(drawnCard!=null)
+            HandManager.Instance.AddCardToHand(drawnCard);
     }
 }

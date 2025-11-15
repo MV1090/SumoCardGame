@@ -7,6 +7,9 @@ public class CardDeck : MonoBehaviour
     public GameObject wrestlingCardPrefab;
     public GameObject utilityCardPrefab;
 
+    [SerializeField, ReadOnly]
+    private List<Card_Scriptable> debugDeck;
+    
     private Queue<Card_Scriptable> deckQueue;
 
     private void Start()
@@ -18,9 +21,11 @@ public class CardDeck : MonoBehaviour
     {
         List<Card_Scriptable> shuffledDeck = deck.BuildShuffledDeck();
         deckQueue = new Queue<Card_Scriptable>(shuffledDeck);
+
+        debugDeck = new List<Card_Scriptable>(deckQueue);
     }
 
-    public GameObject DrawCard(Vector3 newPosition)
+    public GameObject DrawCard()
     {
         if (deckQueue.Count == 0)
         {
@@ -33,11 +38,11 @@ public class CardDeck : MonoBehaviour
 
         if (drawnCard is WrestlingCard_Scriptable)
         {
-            cardObject = Instantiate(wrestlingCardPrefab, newPosition, Quaternion.identity);
+            cardObject = Instantiate(wrestlingCardPrefab);
         }
         else if (drawnCard is UtilityCard_Scriptable)
         {
-            cardObject = Instantiate(utilityCardPrefab, newPosition, Quaternion.identity);
+            cardObject = Instantiate(utilityCardPrefab);
         }
 
         if (cardObject != null)
@@ -49,6 +54,8 @@ public class CardDeck : MonoBehaviour
                 cardDisplay.SafeUpdateCardVisuals();
             }
         }
+
+        debugDeck = new List<Card_Scriptable>(deckQueue);
 
         return cardObject;
     }

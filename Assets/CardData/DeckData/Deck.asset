@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Deck
   m_EditorClassIdentifier: Assembly-CSharp::Deck_Scriptable
   wrestlingCards:
+  - card: {fileID: 11400000, guid: 973b6c399f73e84478a29806d89b7bd7, type: 2}
+    quantity: 3
   - card: {fileID: 11400000, guid: a02208e3fa416dc469601ecf03768082, type: 2}
-    quantity: 5
+    quantity: 3
   utilityCards:
   - card: {fileID: 11400000, guid: a6963ce28f6bbdf42baa011c6d42686e, type: 2}
-    quantity: 5
+    quantity: 4
