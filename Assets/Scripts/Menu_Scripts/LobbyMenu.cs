@@ -7,26 +7,64 @@ using UnityEngine.UI;
 public class LobbyMenu : NetworkBehaviour
 {
     [SerializeField] Button startGameButton;
+    [SerializeField] Button backButton;
     [SerializeField] TMP_Text playerReady;
-
 
     public static Dictionary<ulong, bool> ReadyStates = new Dictionary<ulong, bool>();
 
-    public NetworkObject networkObject;
-
+    public NetworkObject networkObject;    
 
     public override void OnNetworkSpawn()
     {
         Debug.Log($"OnNetworkSpawn: {IsSpawned}, Client ID: {NetworkManager.LocalClientId}");
-        
+    
+        if (IsServer)
+        {
+            ReadyStates.Clear();
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+        }
+        Debug.Log("LobbyMenu: Reset ReadyStates on server.");      
     }
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        if (NetworkManager.Singleton != null)
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+    }
+
+    private void OnClientDisconnected(ulong clientId)
+    {
+        if (!IsServer)
+            return;
+
+        if (ReadyStates.Remove(clientId))
+        {
+            Debug.Log($"[LobbyMenu] Removed ready state for disconnected client {clientId}");
+        }
+    }
     void Start()
     {
         startGameButton.onClick.AddListener(OnStartGameClicked);
+        backButton.onClick.AddListener(OnBackClicked);
         UpdatePlayerReadyStatus(false);
         Debug.Log($"IsSpawned: {networkObject.IsSpawned}");
     }
+
+    void OnBackClicked()
+    {
+        Debug.Log("Back button clicked!");
+        UpdatePlayerReadyStatus(false);
+
+        if (!IsServer)
+        {
+            SetPlayerReadyServerRpc(NetworkManager.Singleton.LocalClientId, false);                  
+        }
+
+        NetworkSceneManager.Instance.ReturnToMainMenu();      
+    }
+
 
     void OnStartGameClicked()
     {

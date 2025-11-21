@@ -39,6 +39,9 @@ public class NetworkSceneManager : NetworkBehaviour
             Destroy(gameObject);
             return;
         }
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+        NetworkManager.Singleton.OnServerStopped += OnServerStopped;
     }
 
     public override void OnNetworkSpawn()
@@ -128,19 +131,16 @@ public class NetworkSceneManager : NetworkBehaviour
         // Disconnect from network first
         if (NetworkManager.Singleton != null)
         {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                NetworkManager.Singleton.Shutdown();
-            }
-            else if (NetworkManager.Singleton.IsClient)
-            {
-                NetworkManager.Singleton.Shutdown();
-            }
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnLoadEventCompleted;
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLoadComplete;
+            NetworkManager.Singleton.SceneManager.OnSynchronizeComplete -= OnSynchronizeComplete;
+            NetworkManager.Singleton.Shutdown();           
         }
 
         // Load main menu locally (not networked)
         Debug.Log("Returning to Main Menu (local scene)");
         SceneManager.LoadScene(MAIN_MENU_SCENE, LoadSceneMode.Single);
+
     }
 
     /// <summary>
@@ -189,6 +189,25 @@ public class NetworkSceneManager : NetworkBehaviour
     public bool IsSceneLoaded(string sceneName)
     {
         return SceneManager.GetActiveScene().name == sceneName;
+    }
+
+    private void OnClientDisconnected(ulong clientId)
+    {
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            Debug.Log("Local client disconnected from host → returning to Main Menu");
+            SceneManager.LoadScene(MAIN_MENU_SCENE);
+        }
+    }
+
+    private void OnServerStopped(bool _)
+    {
+        // If this instance was the host, return to menu
+        if (NetworkManager.Singleton == null || NetworkManager.Singleton.IsClient)
+            return; // Safety, ignore on clients
+
+        Debug.Log("Server stopped → Host returning to Main Menu");
+        SceneManager.LoadScene(MAIN_MENU_SCENE);
     }
 }
 
