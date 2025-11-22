@@ -1,38 +1,176 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
-    public static Player instance;
+    // Static reference to the local player instance (not all players)
+    public static Player localInstance;
+    
+    //// Backward compatibility property (deprecated - use localInstance)
+    //public static Player instance => localInstance;
+    
+    [Header("Player Components")]
+    [SerializeField] private PlayerStats stats;
+    [SerializeField] private PlayerConnectionHandler connectionHandler;
+
+    [Header("Player Data")]
+    [SerializeField] private NetworkPlayerData playerData;
+    [SerializeField] private SumoCard_Scriptable currentSumoCard;
+    [SerializeField] private CardDeck activeDeck;
+
+    public PlayerStats Stats => stats;
+
     private void Awake()
     {
-        if(instance == null){
-            instance = this;
-        } else
+        // Don't use singleton pattern for multiplayer - each client has their own player
+        // Only set localInstance when this is the local player's object
+        
+        // Get or add PlayerConnectionHandler component
+        if (connectionHandler == null)
         {
-            Destroy(gameObject);
-        }
-
-        stats.InitializeStats();
+            connectionHandler = GetComponent<PlayerConnectionHandler>();
+            if (connectionHandler == null)
+            {
+                connectionHandler = gameObject.AddComponent<PlayerConnectionHandler>();
+            }
+        }       
+       
     }
-    public PlayerStats stats;
 
-    [SerializeField] private SumoCard_Scriptable currentSumoCard;
-    [SerializeField] private CardDeck activeDeck; // Can be null until game starts
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        
+        // Set local instance only if this is the local player
+        if (IsOwner)
+        {
+            if (localInstance == null)
+            {
+                localInstance = this;
+            }
+            else if (localInstance != this)
+            {
+                Debug.LogWarning("Multiple local player instances detected! Destroying duplicate.");
+                if (IsServer)
+                {
+                    GetComponent<NetworkObject>().Despawn();
+                }
+                return;
+            }
+        }
+        
+        // Get or add PlayerStats component if not already assigned
+        if (stats == null)
+        {
+            stats = GetComponent<PlayerStats>();
+            if (stats == null)
+            {
+                stats = gameObject.AddComponent<PlayerStats>();
+            }
+        }       
+        
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        
+        // Clear local instance if this was the local player
+        if (IsOwner && localInstance == this)
+        {
+            localInstance = null;
+        }
+    }
 
     /// <summary>
-    /// Initializes the deck for this player. Should be called when the game starts,
-    /// after Sumo selection is complete.
+    /// Called by PlayerConnectionHandler when player is disconnecting.
+    /// Cleans up player-specific resources.
     /// </summary>
-    /// <param name="deck">The CardDeck to assign to this player</param>
+    public void OnPlayerDisconnecting()
+    {
+        // Clean up deck
+        if (activeDeck != null)
+        {
+            // Destroy deck if needed
+            activeDeck = null;
+        }
+
+        // Clear current Sumo card
+        currentSumoCard = null;
+
+        // Reset stats if needed
+        if (stats != null)
+        {
+            stats.ResetStats();
+        }
+    }
+
+    /// <summary>
+    /// Gets the PlayerStats component
+    /// </summary>
+    public PlayerStats GetStats()
+    {
+        return stats;
+    }
+
+    /// <summary>
+    /// Gets the PlayerConnectionHandler component
+    /// </summary>
+    public PlayerConnectionHandler GetConnectionHandler()
+    {
+        return connectionHandler;
+    }   
+    
+    /// <summary>
+    /// Initializes player stats from a SumoCard. Should be called when a Sumo is selected.
+    /// </summary>
+    public void InitializeFromSumoCard(SumoCard_Scriptable sumoCard)
+    {
+        if (!IsServer) return;
+
+        currentSumoCard = sumoCard;
+        
+        if (stats != null)
+        {
+            stats.InitializeFromSumoCard(sumoCard);
+        }
+        
+        Debug.Log($"Player stats initialized from SumoCard: {sumoCard.cardName}");
+    }
+
+    /// <summary>
+    /// Gets the current SumoCard for this player
+    /// </summary>
+    public SumoCard_Scriptable GetCurrentSumoCard()
+    {
+        return currentSumoCard;
+    }
+
+    /// <summary>
+    /// Gets the NetworkPlayerData for this player
+    /// </summary>
+    public NetworkPlayerData GetPlayerData()
+    {
+        return playerData;
+    }
+
+    /// <summary>
+    /// Sets the NetworkPlayerData for this player
+    /// </summary>
+    public void SetPlayerData(NetworkPlayerData data)
+    {
+        playerData = data;
+        if (playerData != null && IsServer)
+        {
+            playerData.SetClientId(OwnerClientId);
+        }
+    } 
     public void InitializeDeck(CardDeck deck)
     {
         activeDeck = deck;
         Debug.Log($"Deck initialized for player");
     }
 
-    /// <summary>
-    /// Checks if the player's deck is initialized and ready
-    /// </summary>
     public bool IsDeckInitialized()
     {
         return activeDeck != null;
@@ -40,7 +178,15 @@ public class Player : MonoBehaviour
 
     public void DrawCard()
     {
-        // Check if deck is initialized
+        if (!IsOwner)
+            return;
+
+        DrawCardServerRpc();
+    }
+
+    [ServerRpc]
+    private void DrawCardServerRpc()
+    {
         if (activeDeck == null)
         {
             Debug.LogWarning("Cannot draw card: Deck has not been initialized yet.");
@@ -59,9 +205,9 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GameObject drawnCard = activeDeck.DrawCard(); 
+        GameObject drawnCard = activeDeck.DrawCard();
 
-        if(drawnCard != null)
+        if (drawnCard != null)
             HandManager.Instance.AddCardToHand(drawnCard);
     }
 }

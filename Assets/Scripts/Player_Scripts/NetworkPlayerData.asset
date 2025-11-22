@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f752a7fd4e639b54e95c4b3b7363fac4, type: 3}
+  m_Name: NetworkPlayerData
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerData
+  playerName: Player
+  playerColor: {r: 0.30047223, g: 0.9622642, b: 0.24964403, a: 1}
+  playerIcon: {fileID: 0}
+  clientId: 0

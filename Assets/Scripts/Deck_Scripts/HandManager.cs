@@ -21,7 +21,11 @@ public class HandManager : MonoBehaviour
 
     public bool IsHandFull()
     {
-        return handCards.Count >= Player.instance.stats.currentHandSize;
+        if (Player.localInstance == null || Player.localInstance.Stats == null)
+        {
+            return false;
+        }
+        return handCards.Count >= Player.localInstance.Stats.currentHandSize.Value;
     }
 
     public void AddCardToHand(GameObject newCard)

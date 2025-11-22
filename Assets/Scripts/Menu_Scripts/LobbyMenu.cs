@@ -36,7 +36,7 @@ public class LobbyMenu : NetworkBehaviour
 
     private void OnClientDisconnected(ulong clientId)
     {
-        if (!IsServer)
+        if(!IsServer)
             return;
 
         if (ReadyStates.Remove(clientId))
@@ -56,6 +56,14 @@ public class LobbyMenu : NetworkBehaviour
     {
         Debug.Log("Back button clicked!");
         UpdatePlayerReadyStatus(false);
+
+        if (NetworkManager.Singleton == null ||
+        !NetworkManager.Singleton.IsConnectedClient)
+        {
+            Debug.Log("Not connected to a host. Returning to main menu locally.");
+            NetworkSceneManager.Instance.ReturnToMainMenu();
+            return;
+        }
 
         if (!IsServer)
         {

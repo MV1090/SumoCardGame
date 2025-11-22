@@ -37,17 +37,17 @@ This document outlines the step-by-step implementation plan to transform the cur
 - [x] Create NetworkManager prefab and configure Netcode settings
 - [x] Set up NetworkObject components on key game objects
 - [x] Configure network prefabs list
-- [ ] Create network scene management system
-- [ ] Set up client-server architecture (host/client model)
-- [ ] Test basic connection between two clients
+- [x] Create network scene management system
+- [x] Set up client-server architecture (host/client model)
+- [x] Test basic connection between two clients
 
 #### 1.2 Network Player System
-- [ ] Convert Player class to NetworkBehaviour
-- [ ] Create NetworkPlayerData scriptable object for player info
-- [ ] Implement player ownership and authority checks
-- [ ] Create player connection/disconnection handlers
-- [ ] Set up player ID system (host vs client)
-- [ ] Implement network synchronization for player stats
+- [x] Convert Player class to NetworkBehaviour
+- [x] Create NetworkPlayerData scriptable object for player info
+- [x] Implement player ownership and authority checks
+- [x] Create player connection/disconnection handlers
+- [x] Set up player ID system (host vs client)
+- [x] Implement network synchronization for player stats
 
 #### 1.3 Network Card System
 - [ ] Convert CardDeck to NetworkBehaviour
