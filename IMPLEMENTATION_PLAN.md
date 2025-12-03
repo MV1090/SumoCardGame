@@ -34,20 +34,20 @@ This document outlines the step-by-step implementation plan to transform the cur
 **Goal**: Set up the core networking infrastructure using Unity Netcode for GameObjects
 
 #### 1.1 Network Setup & Configuration
-- [x] Create NetworkManager prefab and configure Netcode settings
-- [x] Set up NetworkObject components on key game objects
-- [x] Configure network prefabs list
-- [x] Create network scene management system
-- [x] Set up client-server architecture (host/client model)
-- [x] Test basic connection between two clients
+- [✅] Create NetworkManager prefab and configure Netcode settings
+- [✅] Set up NetworkObject components on key game objects
+- [✅] Configure network prefabs list
+- [✅] Create network scene management system
+- [✅] Set up client-server architecture (host/client model)
+- [✅] Test basic connection between two clients
 
 #### 1.2 Network Player System
-- [x] Convert Player class to NetworkBehaviour
-- [x] Create NetworkPlayerData scriptable object for player info
-- [x] Implement player ownership and authority checks
-- [x] Create player connection/disconnection handlers
-- [x] Set up player ID system (host vs client)
-- [x] Implement network synchronization for player stats
+- [✅] Convert Player class to NetworkBehaviour
+- [✅] Create NetworkPlayerData scriptable object for player info
+- [✅] Implement player ownership and authority checks
+- [✅] Create player connection/disconnection handlers
+- [✅] Set up player ID system (host vs client)
+- [✅] Implement network synchronization for player stats
 
 #### 1.3 Network Card System
 - [ ] Convert CardDeck to NetworkBehaviour
@@ -80,8 +80,8 @@ This document outlines the step-by-step implementation plan to transform the cur
 #### 2.3 Game Rules Configuration
 - [ ] Create GameRules ScriptableObject/NetworkVariable
 - [ ] Implement host-only rule configuration UI
-  - [ ] Number of Sumo cards selector (1-5 range)
-  - [ ] Sumo selection method dropdown (Random, Winner Chooses, Coin Toss)
+- [ ] Number of Sumo cards selector (1-5 range)
+- [ ] Sumo selection method dropdown (Random, Winner Chooses, Coin Toss)
 - [ ] Sync game rules to all clients
 - [ ] Add rule display for non-host players (read-only)
 - [ ] Validate rules before game start
