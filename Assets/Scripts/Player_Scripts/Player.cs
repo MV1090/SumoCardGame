@@ -4,10 +4,7 @@ using Unity.Netcode;
 public class Player : NetworkBehaviour
 {
     // Static reference to the local player instance (not all players)
-    public static Player localInstance;
-    
-    //// Backward compatibility property (deprecated - use localInstance)
-    //public static Player instance => localInstance;
+    public static Player localInstance;       
     
     [Header("Player Components")]
     [SerializeField] private PlayerStats stats;
@@ -16,15 +13,13 @@ public class Player : NetworkBehaviour
     [Header("Player Data")]
     [SerializeField] private NetworkPlayerData playerData;
     [SerializeField] private SumoCard_Scriptable currentSumoCard;
-    [SerializeField] private CardDeck activeDeck;
+    [SerializeField] private NetworkCardDeck activeDeck;
 
     public PlayerStats Stats => stats;
 
     private void Awake()
     {
-        // Don't use singleton pattern for multiplayer - each client has their own player
-        // Only set localInstance when this is the local player's object
-        
+               
         // Get or add PlayerConnectionHandler component
         if (connectionHandler == null)
         {
@@ -165,7 +160,7 @@ public class Player : NetworkBehaviour
             playerData.SetClientId(OwnerClientId);
         }
     } 
-    public void InitializeDeck(CardDeck deck)
+    public void InitializeDeck(NetworkCardDeck deck)
     {
         activeDeck = deck;
         Debug.Log($"Deck initialized for player");
@@ -181,12 +176,6 @@ public class Player : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        DrawCardServerRpc();
-    }
-
-    [ServerRpc]
-    private void DrawCardServerRpc()
-    {
         if (activeDeck == null)
         {
             Debug.LogWarning("Cannot draw card: Deck has not been initialized yet.");
@@ -205,9 +194,34 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        GameObject drawnCard = activeDeck.DrawCard();
-
-        if (drawnCard != null)
-            HandManager.Instance.AddCardToHand(drawnCard);
+        activeDeck.RequestDrawCardServerRpc();        
     }
 }
+
+//    [ServerRpc]
+//    private void DrawCardServerRpc()
+//    {
+//        if (activeDeck == null)
+//        {
+//            Debug.LogWarning("Cannot draw card: Deck has not been initialized yet.");
+//            return;
+//        }
+
+//        if (HandManager.Instance == null)
+//        {
+//            Debug.LogWarning("Cannot draw card: HandManager is not available.");
+//            return;
+//        }
+
+//        if (HandManager.Instance.IsHandFull())
+//        {
+//            Debug.Log("Hand is full, cannot draw more cards.");
+//            return;
+//        }
+
+//        GameObject drawnCard = activeDeck.RequestDrawCardServerRpc();
+
+//        if (drawnCard != null)
+//            HandManager.Instance.AddCardToHand(drawnCard);
+//    }
+//}
