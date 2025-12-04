@@ -50,10 +50,10 @@ This document outlines the step-by-step implementation plan to transform the cur
 - [✅] Implement network synchronization for player stats
 
 #### 1.3 Network Card System
-- [ ] Convert CardDeck to NetworkBehaviour
-- [ ] Make card GameObjects network objects
-- [ ] Implement network synchronization for deck state
-- [ ] Create network-safe card drawing (server-authoritative)
+- [✅] Convert CardDeck to NetworkBehaviour
+- [✅] Make card GameObjects network objects
+- [✅] Implement network synchronization for deck state
+- [✅] Create network-safe card drawing (server-authoritative)
 - [ ] Implement network hand synchronization
 - [ ] Add network visibility controls (hide opponent cards)
 
