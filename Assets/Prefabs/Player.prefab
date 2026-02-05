@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6874369418208989145}
   - component: {fileID: 8439397066727638616}
   - component: {fileID: -7401670140719854707}
+  - component: {fileID: -2139675894977844503}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -124,7 +125,15 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerId:
     m_InternalValue: 0
-  isHost:
-    m_InternalValue: 0
-  player: {fileID: 0}
-  playerData: {fileID: 0}
+--- !u!114 &-2139675894977844503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2591153854747335566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 101d3c707ec397b4598108c6aba43e82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardSelect

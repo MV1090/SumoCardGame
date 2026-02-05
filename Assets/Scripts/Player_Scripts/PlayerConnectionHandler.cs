@@ -30,6 +30,7 @@ public class PlayerConnectionHandler : NetworkBehaviour
         Debug.Log($"Player spawned. Owner={OwnerClientId}, ID={playerId.Value}");
     }
 
+
     private void OnClientDisconnected(ulong clientId)
     {
         // If we are the one who disconnected, ignore

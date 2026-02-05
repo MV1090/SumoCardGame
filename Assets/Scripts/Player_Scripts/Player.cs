@@ -4,7 +4,8 @@ using Unity.Netcode;
 public class Player : NetworkBehaviour
 {
     // Static reference to the local player instance (not all players)
-    public static Player localInstance;       
+    public static Player localInstance;
+    public static int playerID;
     
     [Header("Player Components")]
     [SerializeField] private PlayerStats stats;
@@ -26,10 +27,9 @@ public class Player : NetworkBehaviour
             connectionHandler = GetComponent<PlayerConnectionHandler>();
             if (connectionHandler == null)
             {
-                connectionHandler = gameObject.AddComponent<PlayerConnectionHandler>();
+                connectionHandler = gameObject.AddComponent<PlayerConnectionHandler>();                
             }
-        }       
-       
+        }              
     }
 
     public override void OnNetworkSpawn()

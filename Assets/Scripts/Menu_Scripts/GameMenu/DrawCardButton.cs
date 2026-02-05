@@ -7,18 +7,16 @@ public class DrawCardButton : MonoBehaviour
 
     private void Awake()
     {        
-        button.interactable = false; // Disabled until local player exists
+        button.interactable = false;
     }
 
     private void Start()
-    {
-        // Try to register once at start
+    {        
         TryRegister();
     }
 
     private void Update()
-    {
-        // If still not registered, keep trying until player spawns
+    {        
         if (Player.localInstance != null && button.onClick.GetPersistentEventCount() == 0)
         {
             TryRegister();

@@ -8,16 +8,15 @@ public class NetworkCardDeck : NetworkBehaviour
     public Deck_Scriptable deck;
 
     [Header("Card Prefabs")]
-    public GameObject wrestlingCardPrefab;
-    public GameObject utilityCardPrefab;
+    public NetworkObject wrestlingCardPrefab;
+    public NetworkObject utilityCardPrefab;
 
     private Queue<int> deckQueue;
     [SerializeField] private CardCatalog_Scriptable cardCatalog;
 
 
     public override void OnNetworkSpawn()
-    {
-        //cardCatalog = Resources.Load<CardCatalog_Scriptable>("CardCatalog_Scriptable");
+    {       
 
         if (cardCatalog == null)
         {
@@ -73,42 +72,10 @@ public class NetworkCardDeck : NetworkBehaviour
         ulong requester = rpcParams.Receive.SenderClientId;
 
         int cardTypeId = ServerDrawCard();
-        if (cardTypeId == -1)
-        {
-            return;
-        }
 
-        SpawnDrawnCardClientRpc(cardTypeId, new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[] { requester }
-            }
-        });
-
-        return;
-    }
-
-    [ClientRpc]
-    private void SpawnDrawnCardClientRpc(int cardTypeId, ClientRpcParams rpcParams = default)
-    {
         Card_Scriptable cardData = cardCatalog.GetCard(cardTypeId);
-        if(cardData == null)
-        {
-            Debug.LogError($"Client received invalid cardTypeId {cardTypeId}");
-            return ;
-        }
-        GameObject drawnCard = CreateLocalCard(cardData);
-        
-        if (drawnCard != null)
-        HandManager.Instance.AddCardToHand(drawnCard);
 
-        return; 
-    }
-
-    private GameObject CreateLocalCard(Card_Scriptable cardData)
-    {
-        GameObject cardObject = null;
+        NetworkObject cardObject = null;
 
         if (cardData is WrestlingCard_Scriptable)
         {
@@ -119,16 +86,73 @@ public class NetworkCardDeck : NetworkBehaviour
             cardObject = Instantiate(utilityCardPrefab);
         }
 
-        if (cardObject != null)
+        if (cardObject == null)
         {
-            BaseCard cardDisplay = cardObject.GetComponent<BaseCard>();
-            if (cardDisplay != null)
-            {
-                cardDisplay.cardData = cardData;
-                cardDisplay.SafeUpdateCardVisuals();
-            }
+            Debug.LogError($"Failed to instantiate card prefab for cardTypeId: {cardTypeId}");
+            return;
         }
 
-        return cardObject;
-    }    
+        cardObject.SpawnWithOwnership(requester);
+
+        BaseCard drawnCard = cardObject.GetComponent<BaseCard>();
+        if (drawnCard != null)
+        {
+            drawnCard.cardData = cardData;
+            drawnCard.CardID.Value = cardTypeId;
+            drawnCard.CardOwnerId.Value = GetPlayerIdByClientId(requester);
+        }
+        else
+        {
+            Debug.LogError("Spawned card does not have BaseCard component!");
+        }
+
+        return;
+    }
+
+    private int GetPlayerIdByClientId(ulong clientId)
+    {
+        Player player = FindPlayerByClientId(clientId);
+        if (player != null && player.GetConnectionHandler() != null)
+        {
+            return player.GetConnectionHandler().playerId.Value;
+        }
+        return -1;
+    }
+
+    private Player FindPlayerByClientId(ulong clientId)
+    {
+        Player[] allPlayers = GameObject.FindObjectsOfType<Player>();
+        foreach (var player in allPlayers)
+        {
+            NetworkObject playerNetworkObject = player.GetComponent<NetworkObject>();
+            if (playerNetworkObject != null && playerNetworkObject.OwnerClientId == clientId)
+            {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    //[ClientRpc]
+    //private void SpawnDrawnCardClientRpc(int cardTypeId, ClientRpcParams rpcParams = default)
+    //{
+    //    Card_Scriptable cardData = cardCatalog.GetCard(cardTypeId);
+    //    if(cardData == null)
+    //    {
+    //        Debug.LogError($"Client received invalid cardTypeId {cardTypeId}");
+    //        return ;
+    //    }
+    //    GameObject drawnCard = CreateLocalCard(cardData);
+
+    //    if (drawnCard != null)
+    //    {            
+    //        Debug.Log($"[Client] Spawned drawn card: {cardData.cardName}");
+    //        HandManager.Instance.AddCardToHand(drawnCard);
+    //    }
+
+    //    BaseCard card = drawnCard.GetComponent<BaseCard>();
+    //    card.isInHand = true;
+
+    //    return; 
+    //}       
 }

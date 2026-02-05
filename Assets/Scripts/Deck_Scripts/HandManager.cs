@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,11 +6,13 @@ public class HandManager : MonoBehaviour
 {
     public static HandManager Instance;
 
-    public Transform handAnchor;    
+    public Transform playerHandAnchor;
+    public Transform opponentHandTransform;
     public float cardSpacing = 2.0f;
     public float fanAngle = 10.0f;
 
-    public List<GameObject> handCards = new List<GameObject>();
+    public List<GameObject> playerHandCards = new List<GameObject>();
+    public List<GameObject> opponentHandCards = new List<GameObject>();
 
     private void Awake()
     {
@@ -25,33 +28,40 @@ public class HandManager : MonoBehaviour
         {
             return false;
         }
-        return handCards.Count >= Player.localInstance.Stats.currentHandSize.Value;
+        return playerHandCards.Count >= Player.localInstance.Stats.currentHandSize.Value;
     }
 
     public void AddCardToHand(GameObject newCard)
     {
-        newCard.transform.SetParent(handAnchor);
-
-        handCards.Add(newCard);
-
-        RepositionHand();
+        StartCoroutine(WaitAndReposition(newCard));     
     }
 
-    public void RepositionHand()
+    IEnumerator WaitAndReposition(GameObject newCard)
     {
-        float centerOffset = (handCards.Count - 1) * 0.5f * cardSpacing;
+        yield return new WaitForSeconds(1);
 
-        for (int i = 0; i < handCards.Count; i++)
+        newCard.transform.position = playerHandAnchor.position;           
+
+        playerHandCards.Add(newCard);
+
+        RepositionHand(playerHandAnchor, playerHandCards);
+    }
+
+    public void RepositionHand(Transform handTransform, List<GameObject> hand)
+    {
+        float centerOffset = (hand.Count - 1) * 0.5f * cardSpacing;
+
+        for (int i = 0; i < hand.Count; i++)
         {
-            GameObject card = handCards[i];
+            GameObject card = hand[i];
 
-            Vector3 targetPosition = handAnchor.position + handAnchor.right * (i * cardSpacing - centerOffset);
+            Vector3 targetPosition = handTransform.position + handTransform.right * (i * cardSpacing - centerOffset);
 
-            Quaternion targetRotation = Quaternion.Euler(0, 0, (i - (handCards.Count - 1) / 2.0f) * fanAngle);
+            //Quaternion targetRotation = Quaternion.Euler(0, 0, (i - (handCards.Count - 1) / 2.0f) * fanAngle);
 
-            card.transform.localPosition = handAnchor.InverseTransformPoint(targetPosition);
-            card.transform.localRotation = targetRotation;
+            card.transform.localPosition = handTransform.InverseTransformPoint(targetPosition);
+            //card.transform.localRotation = targetRotation;
         }
     }
-
+        
 }

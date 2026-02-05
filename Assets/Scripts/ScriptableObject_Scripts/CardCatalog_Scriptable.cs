@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "CardCatalog_Scriptable", menuName = "Cards/CardCatalog_Scriptable")]
 public class CardCatalog_Scriptable : ScriptableObject
 {
-    public List<Card_Scriptable> allCards = new List<Card_Scriptable>();
+    public List<Card_Scriptable> allCards = new List<Card_Scriptable>();     
 
     public List<Card_Scriptable> GetAllCards()
     {
