@@ -95,11 +95,14 @@ public class NetworkCardDeck : NetworkBehaviour
         cardObject.SpawnWithOwnership(requester);
 
         BaseCard drawnCard = cardObject.GetComponent<BaseCard>();
+
         if (drawnCard != null)
         {
             drawnCard.cardData = cardData;
             drawnCard.CardID.Value = cardTypeId;
             drawnCard.CardOwnerId.Value = GetPlayerIdByClientId(requester);
+            drawnCard.SafeUpdateCardVisuals();
+            
         }
         else
         {

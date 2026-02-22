@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEditor;
@@ -40,7 +41,65 @@ public class BaseCard : NetworkBehaviour
         {
             cardData = cardCatalog.GetCard(CardID.Value);
             SafeUpdateCardVisuals();
-        }       
+        }
+
+        CardOwnerId.OnValueChanged += OnCardOwnerIdChanged;
+
+        if (CardOwnerId.Value != -1)
+        {
+            StartCoroutine(RegisterCardWithHandManager());
+        }
+    }
+
+    private void OnCardOwnerIdChanged(int oldValue, int newValue)
+    {
+        if (newValue != -1 && !isInHand)
+        {
+            StartCoroutine(RegisterCardWithHandManager());
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        CardOwnerId.OnValueChanged -= OnCardOwnerIdChanged;
+    }
+
+    private IEnumerator RegisterCardWithHandManager()
+    {
+        int maxWaitFrames = 10;
+        int framesWaited = 0;
+
+        while (framesWaited < maxWaitFrames)
+        {
+            // Check if everything is ready
+            if (HandManager.Instance != null &&
+                CardOwnerId.Value != -1 &&
+                Player.localInstance != null &&
+                Player.localInstance.GetConnectionHandler() != null)
+            {
+                // Double-check we haven't already been added
+                if (!isInHand)
+                {
+                    HandManager.Instance.AddCardToHand(this);
+                    isInHand = true;
+                }
+                yield break;
+            }
+
+            yield return null;
+            framesWaited++;
+        }
+
+        // If we got here, something might be wrong
+        if (HandManager.Instance == null)
+        {
+            Debug.LogWarning($"[BaseCard] HandManager.Instance is null after waiting. CardID: {CardID.Value}");
+        }
+        else if (CardOwnerId.Value == -1)
+        {
+            Debug.LogWarning($"[BaseCard] CardOwnerId is still -1 after waiting. CardID: {CardID.Value}");
+        }
     }
 
     public bool IsOwnedByLocalPlayer()
