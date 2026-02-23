@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UtilityCard_Scriptable
   cardName: Power Boost
   cardDescription: 
-  cardSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  cardArtWork: {fileID: 0}
+  cardFaceSprite: {fileID: 21300000, guid: 9a8cd89826782634ba3dd53f4570bc01, type: 3}
+  cardBackSprite: {fileID: 21300000, guid: c4a281019644db248bcce9b2ed87d467, type: 3}
   utilityAbility: {fileID: 11400000, guid: 698ec670241574a489b890d7d538192b, type: 2}

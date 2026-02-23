@@ -266,7 +266,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9a8cd89826782634ba3dd53f4570bc01, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4a281019644db248bcce9b2ed87d467, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -549,6 +549,7 @@ MonoBehaviour:
   nameText: {fileID: 2067636759716958712}
   descriptionText: {fileID: 0}
   artworkImage: {fileID: 711443906281876788}
+  cardBackgroundImage: {fileID: 7828792302095679945}
   isInHand: 0
   isSelected: 0
   CardOwnerId:

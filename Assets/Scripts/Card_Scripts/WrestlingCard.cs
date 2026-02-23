@@ -2,24 +2,8 @@ using UnityEngine;
 
 public class WrestlingCard : BaseCard
 {
-    public override void SafeUpdateCardVisuals()
+    public override void UpdateCardVisuals()
     {
-        base.SafeUpdateCardVisuals();
-
-        if (cardData == null)
-        {
-           
-        }
-        else
-        {
-            if (cardData is WrestlingCard_Scriptable wrestlingCardData)
-            {
-               
-            }
-            else
-            {
-               
-            }
-        }
+        base.UpdateCardVisuals();
     }
 }

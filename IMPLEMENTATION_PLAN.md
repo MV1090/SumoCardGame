@@ -55,7 +55,7 @@ This document outlines the step-by-step implementation plan to transform the cur
 - [✅] Implement network synchronization for deck state
 - [✅] Create network-safe card drawing (server-authoritative)
 - [✅] Implement network hand synchronization
-- [ ] Add network visibility controls (hide opponent cards)
+- [✅] Add network visibility controls (hide opponent cards)
 
 ---
 
@@ -63,9 +63,9 @@ This document outlines the step-by-step implementation plan to transform the cur
 **Goal**: Create the lobby system where players join and configure game rules
 
 #### 2.1 Lobby UI Foundation
-- [ ] Create Lobby scene
-- [ ] Design and implement main menu UI (Start Game, Join Game buttons)
-- [ ] Create lobby UI layout (player slots, ready buttons, settings)
+- [✅] Create Lobby scene
+- [✅] Design and implement main menu UI (Start Game, Join Game buttons)
+- [✅] Create lobby UI layout (player slots, ready buttons, settings)
 - [ ] Implement UI state management system
 - [ ] Add loading/connecting indicators
 
@@ -87,11 +87,11 @@ This document outlines the step-by-step implementation plan to transform the cur
 - [ ] Validate rules before game start
 
 #### 2.4 Player Ready System
-- [ ] Create ready status NetworkVariable per player
-- [ ] Implement ready/unready button functionality
-- [ ] Add visual feedback for ready status (checkmarks, colors)
-- [ ] Create ready status synchronization
-- [ ] Implement game start validation (both players ready + rules set)
+- [⚠️] Create ready status NetworkVariable per player (currently using Dictionary - needs upgrade)
+- [✅] Implement ready/unready button functionality
+- [⚠️] Add visual feedback for ready status (checkmarks, colors) - basic text exists, needs enhancement
+- [✅] Create ready status synchronization
+- [⚠️] Implement game start validation (both players ready + rules set) - checks ready but not rules
 - [ ] Add countdown timer before game start (optional)
 
 ---

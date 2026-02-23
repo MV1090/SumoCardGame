@@ -7,9 +7,9 @@ public class SumoCard : BaseCard
 {
     public TMP_Text staminaText;
 
-    public override void SafeUpdateCardVisuals()
+    public override void UpdateCardVisuals()
     {
-        base.SafeUpdateCardVisuals();
+        base.UpdateCardVisuals();
         if (cardData == null) { 
             if (staminaText) 
                 staminaText.text = ""; 

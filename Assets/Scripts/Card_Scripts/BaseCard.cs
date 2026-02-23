@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 
 public class BaseCard : NetworkBehaviour
@@ -13,6 +12,7 @@ public class BaseCard : NetworkBehaviour
     public TMP_Text descriptionText;
 
     public SpriteRenderer artworkImage;
+    public SpriteRenderer cardBackgroundImage;
 
     public bool isInHand = false;
     public bool isSelected = false;
@@ -40,7 +40,6 @@ public class BaseCard : NetworkBehaviour
         if (cardData == null && CardID.Value != -1)
         {
             cardData = cardCatalog.GetCard(CardID.Value);
-            SafeUpdateCardVisuals();
         }
 
         CardOwnerId.OnValueChanged += OnCardOwnerIdChanged;
@@ -53,9 +52,12 @@ public class BaseCard : NetworkBehaviour
 
     private void OnCardOwnerIdChanged(int oldValue, int newValue)
     {
-        if (newValue != -1 && !isInHand)
+        if (newValue != -1)
         {
+            isInHand = false;
+            HandManager.Instance.RemoveCardFromHand(this);
             StartCoroutine(RegisterCardWithHandManager());
+            
         }
     }
 
@@ -63,6 +65,8 @@ public class BaseCard : NetworkBehaviour
     {
         base.OnNetworkDespawn();
         CardOwnerId.OnValueChanged -= OnCardOwnerIdChanged;
+        isInHand = false;
+        HandManager.Instance.RemoveCardFromHand(this);
     }
 
     private IEnumerator RegisterCardWithHandManager()
@@ -83,6 +87,7 @@ public class BaseCard : NetworkBehaviour
                 {
                     HandManager.Instance.AddCardToHand(this);
                     isInHand = true;
+                    //UpdateCardVisuals();
                 }
                 yield break;
             }
@@ -105,7 +110,7 @@ public class BaseCard : NetworkBehaviour
     public bool IsOwnedByLocalPlayer()
     {
         if (Player.localInstance == null ||
-        Player.localInstance.GetConnectionHandler() == null)
+            Player.localInstance.GetConnectionHandler() == null)
             return false;
 
         return CardOwnerId.Value == Player.localInstance.GetConnectionHandler().playerId.Value;
@@ -121,50 +126,55 @@ public class BaseCard : NetworkBehaviour
         //OnCardHover += SetOnHoverPos;
         //OnCardHoverExit += SetOffHoverPos;
     }
-
-    private void InitCard()
+ 
+    
+    public virtual void UpdateCardVisuals()
     {
-        nameText.text = cardData.cardName;
-        descriptionText.text = "Ability: /n" + cardData.cardDescription;
-        artworkImage.sprite = cardData.cardSprite;
-    }
+        if(cardData == null)
+            cardData = cardCatalog.GetCard(CardID.Value);
 
-    // for editor updates   
-    private void OnValidate()
-    {
-//#if UNITY_EDITOR
-//        if (!Application.isPlaying)
-//        {
-//            EditorApplication.delayCall += () =>
-//            {
-//                if (this == null) return; // object might have been destroyed
-//                SafeUpdateCardVisuals();
-//            };
-//            return;
-//        }
-//#endif
-//        SafeUpdateCardVisuals();
-    }
-
-    public virtual void SafeUpdateCardVisuals()
-    {
-        if (cardData == null)
-        {
-            if (nameText) nameText.text = "";
-            if (descriptionText) descriptionText.text = "";
-            if (artworkImage) artworkImage.sprite = null;
-        }
+        if(IsOwnedByLocalPlayer())
+            ShowCardFace();
         else
-        {
-            if (nameText) nameText.text = cardData.cardName;
-            if (descriptionText) descriptionText.text = "Ability: \n"  + cardData.cardDescription;
-            if (artworkImage) artworkImage.sprite = cardData.cardSprite;
-        }
+            ShowCardBack();
     }
 
-    public void UpdateCardVisuals()
+    private void ShowCardFace()
     {
+        if (cardData == null && cardCatalog != null && CardID.Value != -1)
+            cardData = cardCatalog.GetCard(CardID.Value);
 
+        if (cardData == null)
+            return;
+
+        if (nameText) nameText.text = cardData.cardName;
+        if (descriptionText) descriptionText.text = "Ability: \n" + cardData.cardDescription;
+        if (artworkImage) artworkImage.sprite = cardData.cardArtWork;
+        if (cardBackgroundImage) cardBackgroundImage.sprite = cardData.cardFaceSprite;
+    }
+
+    private void ShowCardBack()
+    {
+        if (cardData == null && cardCatalog != null && CardID.Value != -1)
+            cardData = cardCatalog.GetCard(CardID.Value);
+
+        if (cardData == null)
+            return;
+
+        if (nameText) nameText.text = "";
+        if (descriptionText) descriptionText.text = "";
+        if (artworkImage) artworkImage.sprite = null;
+        if (cardBackgroundImage)
+            cardBackgroundImage.sprite = cardData.cardBackSprite;
+    }
+
+    public virtual void PlayCard()
+    {
+        isInHand = false;
+        HandManager.Instance.RemoveCardFromHand(this);
+        CardOwnerId.Value = -1; // Clear ownership when played
+
+        Debug.Log($"Playing card: {cardData.cardName}");
     }
 
     //private void SetOnHoverPos(BaseCard baseCard)
@@ -179,9 +189,8 @@ public class BaseCard : NetworkBehaviour
     //{
     //    if (!isInHand)
     //        return;        
-        
+
     //    Debug.Log("Mouse exit card");
     //}
-
 
 }

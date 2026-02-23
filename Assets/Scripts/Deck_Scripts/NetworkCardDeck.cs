@@ -100,9 +100,7 @@ public class NetworkCardDeck : NetworkBehaviour
         {
             drawnCard.cardData = cardData;
             drawnCard.CardID.Value = cardTypeId;
-            drawnCard.CardOwnerId.Value = GetPlayerIdByClientId(requester);
-            drawnCard.SafeUpdateCardVisuals();
-            
+            drawnCard.CardOwnerId.Value = GetPlayerIdByClientId(requester);                      
         }
         else
         {
@@ -134,28 +132,5 @@ public class NetworkCardDeck : NetworkBehaviour
             }
         }
         return null;
-    }
-
-    //[ClientRpc]
-    //private void SpawnDrawnCardClientRpc(int cardTypeId, ClientRpcParams rpcParams = default)
-    //{
-    //    Card_Scriptable cardData = cardCatalog.GetCard(cardTypeId);
-    //    if(cardData == null)
-    //    {
-    //        Debug.LogError($"Client received invalid cardTypeId {cardTypeId}");
-    //        return ;
-    //    }
-    //    GameObject drawnCard = CreateLocalCard(cardData);
-
-    //    if (drawnCard != null)
-    //    {            
-    //        Debug.Log($"[Client] Spawned drawn card: {cardData.cardName}");
-    //        HandManager.Instance.AddCardToHand(drawnCard);
-    //    }
-
-    //    BaseCard card = drawnCard.GetComponent<BaseCard>();
-    //    card.isInHand = true;
-
-    //    return; 
-    //}       
+    }        
 }

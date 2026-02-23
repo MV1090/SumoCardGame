@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class UtilityCard : BaseCard
 {
-    public override void SafeUpdateCardVisuals()
+    public override void UpdateCardVisuals()
     {
-        base.SafeUpdateCardVisuals();
+        base.UpdateCardVisuals();
     }
 }

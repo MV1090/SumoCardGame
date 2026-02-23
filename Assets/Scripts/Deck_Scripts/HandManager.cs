@@ -46,6 +46,20 @@ public class HandManager : MonoBehaviour
         }
     }
 
+    public void RemoveCardFromHand(BaseCard cardToRemove)
+    {
+        if (playerHandCards.Contains(cardToRemove))
+        {
+            playerHandCards.Remove(cardToRemove);
+            RepositionHand(playerHandAnchor, playerHandCards);
+        }
+        else if (opponentHandCards.Contains(cardToRemove))
+        {
+            opponentHandCards.Remove(cardToRemove);
+            RepositionHand(opponentHandAnchor, opponentHandCards);
+        }
+    }
+
     IEnumerator WaitAndReposition(BaseCard newCard, Transform handTransform, List<BaseCard> hand)
     {
         if (hand.Contains(newCard))
@@ -58,10 +72,13 @@ public class HandManager : MonoBehaviour
         if (!hand.Contains(newCard))
         {
             hand.Add(newCard);
+            newCard.UpdateCardVisuals();
         }
 
         RepositionHand(handTransform, hand);
     }
+
+
 
     public void RepositionHand(Transform handTransform, List<BaseCard> hand)
     {
